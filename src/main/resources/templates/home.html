@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' data-th-href="@{/css/output.css}" />
+    <script src='main.js'></script>
+    <style>
+        .container {
+            margin: auto;
+            width: 50%;
+            padding: 30px;
+            border: 1px solid #ccc;
+            background: #e2e2e2;
+            text-align: center;
+            margin-top: 100px;
+        }
+    </style>
+        
+</head>
+<body>
+    <div class="container">
+        <h1 data-th-text="${name}">Home</h1>
+        <p ></p>message :<span data-th-text="${message}"></span></p>
+        <p>Title:<span data-th-text="${title}"></span></p>
+        <p>Date:<span data-th-text="${date}"></span></p>
+        <a data-th-href="${name}">Click Here to open</a>
+
+    </div>
+    
+</body>
+</html>
