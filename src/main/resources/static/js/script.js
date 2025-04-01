@@ -1,46 +1,22 @@
-console.log('Hello from script.js');
+document.addEventListener("DOMContentLoaded", function () {
+    const themeButton = document.querySelector("#theme_change_button");
+    const htmlElement = document.documentElement;
 
-let currentTheme = getTheme();
-console.log(currentTheme);
-
-//starting time
-changeTheme();
-
-function changeTheme() {
-    
-    //set to web page
-    document.querySelector('html').classList.add(currentTheme);
-
-    //set to listener to change these button
-    const changeThemeButton = document.querySelector('#theme_change_button')
-    changeThemeButton.addEventListener('click', (event) => {
-        console.log('change theme button clicked');
-        if (currentTheme === 'light') {
-            currentTheme = 'dark';
-        } else {
-            currentTheme = 'light';
-        }
-        setTheme();
-        document.querySelector('html').classList.remove('light');
-        document.querySelector('html').classList.remove('dark');
-        document.querySelector('html').classList.add(currentTheme);
-       
-    });
-
-}
-
-//set theme to global storage
-
-function setTheme() {
-    localStorage.setItem("theme", theme);
-}
-
-
-//get theme from local storage
-function getTheme() {
-    let theme = localStorage.getItem("theme");
-    if (theme ) {
-        return theme
+    // Function to apply the theme
+    function applyTheme(theme) {
+        htmlElement.classList.remove("light", "dark");
+        htmlElement.classList.add(theme);
+        localStorage.setItem("theme", theme);
+        themeButton.querySelector("span").textContent = theme === "light" ? "Dark" : "Light";
     }
-    else return "light"
-}
+
+    // Get theme from localStorage or default to light
+    let currentTheme = localStorage.getItem("theme") || "light";
+    applyTheme(currentTheme);
+
+    // Toggle theme on button click
+    themeButton.addEventListener("click", function () {
+        currentTheme = currentTheme === "light" ? "dark" : "light";
+        applyTheme(currentTheme);
+    });
+});
