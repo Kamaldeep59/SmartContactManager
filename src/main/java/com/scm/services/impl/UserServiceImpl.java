@@ -2,18 +2,16 @@ package com.scm.services.impl;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.catalina.User;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.scm.entities.User;
 import com.scm.helpers.ResourceNotFoundException;
 import com.scm.repositories.UserRepo;
 import com.scm.services.UserService;
-
-import jakarta.annotation.Resource;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,6 +19,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepo userRepo;
 
+    @SuppressWarnings("unused")
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
@@ -41,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) {
-        return userRepo.findByEmail(email);
+        return userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
@@ -56,13 +55,13 @@ public class UserServiceImpl implements UserService {
         user2.setEnabled(user.isEnabled());
         user2.setAbout(user.getAbout());
         user2.setEmailVerified(user.isEmailVerified());
-        user2.setPhoneVarified(user.isPhoneVarified());
+        user2.setPhoneVerified(user.isPhoneVerified());
         user2.setProvider(user.getProvider());
         user2.setProviderUserId(user.getProviderUserId());
 
 
         //save to database
-        User save = userRepo.save(user2);
+        com.scm.entities.User save = userRepo.save(user2); 
         
 
         return Optional.ofNullable(save);

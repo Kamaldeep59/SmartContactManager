@@ -13,6 +13,7 @@ import com.scm.forms.UserForm;
 import com.scm.services.UserService;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Controller
 public class PageController {
 
@@ -42,21 +44,20 @@ public class PageController {
     }
     
     @GetMapping("/about")
-    public String about(Model model) {
+    public String about() {
         System.out.println("PageController: Passing through...");
-        model.addAttribute("title", "About");
         return "about";
     }
     @GetMapping("/services")
-    public String services(Model model) {
+    public String services() {
         System.out.println("PageController: Passing through...");
-        model.addAttribute("title", "Services");
+       
         return "services";
     }
     @GetMapping("/contact") 
-    public String contact(Model model) {
+    public String contact() {
         System.out.println("PageController: Passing through...");
-        model.addAttribute("title", "Contact");
+        
         return "contact";
     }
     @GetMapping("/register")  
@@ -68,9 +69,9 @@ public class PageController {
         return "register";
     }
     @GetMapping("/login") 
-    public String login(Model model) {
+    public String login() {
         System.out.println("PageController: Passing through...");
-        model.addAttribute("title", "Login");
+        
         return "login";
     }    
 
@@ -95,7 +96,7 @@ public class PageController {
         
         .build();
 
-        User savedUser = userService.saveUser(userForm);
+        User savedUser = userService.saveUser(user);
         System.out.println("User saved: " + savedUser);
 
 
