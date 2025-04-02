@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.scm.entities.User;
 import com.scm.forms.UserForm;
+import com.scm.helpers.Message;
+import com.scm.helpers.MessageType;
 import com.scm.services.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -60,8 +63,8 @@ public class PageController {
         
         return "contact";
     }
-    @GetMapping("/register")  
-    public String register(Model model) {
+    @RequestMapping("/register")  
+    public String register(Model model,HttpSession session) {
         System.out.println("PageController: Passing through...");
         UserForm userForm = new UserForm();
         //userForm.setName("kamal");  kuch bhi hard coded krna h to
@@ -77,7 +80,7 @@ public class PageController {
 
     //processing register
     @RequestMapping(value = "/do-register",method =RequestMethod.POST)
-    public String processRegister(@ModelAttribute UserForm userForm) {
+    public String processRegister(@ModelAttribute UserForm userForm,HttpSession session) {
         System.out.println("processing register");
         //fetch data from userform
         System.out.println(userForm);
@@ -86,18 +89,35 @@ public class PageController {
         //sae to database  
         //userservice
 
-        User user = User.builder()
-        .name(userForm.getName())
-        .email(userForm.getEmail())
-        .password(userForm.getPassword())
-        .about(userForm.getAbout())
-        .phoneNumber(userForm.getPhoneNumber())
-        .profilePic("https://www.google.com/search?q=k+pic+download&oq=k+pic+download&gs_lcrp=EgZjaHJvbWUyCQgAEEUYORiABDIHCAEQABiABDIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBCDI3MjBqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8#vhid=GwU_erjVaQn0oM&vssid=__djrZ8yHHNOw4-EP5_WfsQY_53")
+        // User user = User.builder()
+        // .name(userForm.getName())
+        // .email(userForm.getEmail())
+        // .password(userForm.getPassword())
+        // .about(userForm.getAbout())
+        // .phoneNumber(userForm.getPhoneNumber())
+        // .profilePic("https://www.google.com/search?q=k+pic+download&oq=k+pic+download&gs_lcrp=EgZjaHJvbWUyCQgAEEUYORiABDIHCAEQABiABDIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBCDI3MjBqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8#vhid=GwU_erjVaQn0oM&vssid=__djrZ8yHHNOw4-EP5_WfsQY_53")
         
-        .build();
+        // .build();
+        User user = new User();
+        user.setName(userForm.getName());
+        user.setEmail(userForm.getEmail());
+        user.setPassword(userForm.getPassword());
+        user.setAbout(userForm.getAbout());
+        user.setPhoneNumber(userForm.getPhoneNumber());
+        user.setProfilePic("https://www.google.com/search?q=k+pic+download&oq=k+pic+download&gs_lcrp=EgZjaHJvbWUyCQgAEEUYORiABDIHCAEQABiABDIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBCDI3MjBqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8#vhid=GwU_erjVaQn0oM&vssid=__djrZ8yHHNOw4-EP5_WfsQY_53");
+        
 
         User savedUser = userService.saveUser(user);
         System.out.println("User saved: " + savedUser);
+
+
+        //meesage add
+        Message message = Message.builder().content("Registration successful").type(MessageType.green).build();
+
+
+
+        session.setAttribute("message", message);
+
 
 
        
