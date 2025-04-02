@@ -69,6 +69,7 @@ public class PageController {
         UserForm userForm = new UserForm();
         //userForm.setName("kamal");  kuch bhi hard coded krna h to
         model.addAttribute("userForm", userForm);
+        model.addAttribute("type", "success");
         return "register";
     }
     @GetMapping("/login") 
