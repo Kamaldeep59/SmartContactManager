@@ -1,13 +1,14 @@
 package com.scm.entities;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,14 +18,14 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -50,10 +51,10 @@ public class User implements UserDetails {
     
     @Column(length = 1000)
     private String profilePic;
+    @Pattern(regexp = "^[0-9]{10}$", message = "Invalid phone number")
     private String phoneNumber;
     
     //information
-    @Getter(value = AccessLevel.NONE)
     private boolean enabled = false;
     private boolean emailVerified = false;
     private boolean phoneVerified = false;
@@ -68,18 +69,19 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",cascade = jakarta.persistence.CascadeType.ALL,fetch = jakarta.persistence.FetchType.LAZY,orphanRemoval = true) 
     private List<Contact> contacts = new ArrayList<>();
 
+    @ElementCollection(fetch = jakarta.persistence.FetchType.LAZY)
+    private List<String> roleList = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        //list of roles[admin,user]
+        //collection of simplegrantedauthority{admin,user}
+        Collection<SimpleGrantedAuthority> roles = roleList.stream().map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
+        return roles;
     }
 
     @Override
     public String getUsername() {
         return this.email;
     }
-
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
 }
